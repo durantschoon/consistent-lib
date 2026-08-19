@@ -19,7 +19,7 @@ if ALL criteria pass.
    - a docstring derived from the core var's docstring plus a one-line coll-first note;
    - literal, accurate `:arglists` metadata for the wrapped arities;
    - pure delegation to the core fn (guardrail 1).
-2. Port ALL 17 existing public fns in `consistent-lib.core` to the macro. Public API
+2. Port ALL 18 existing public fns in `consistent-lib.core` to the macro. Public API
    (names, arities, behavior) must be byte-for-byte compatible with today — guardrail 5.
 3. New test ns `consistent-lib.metadata-test`: every public var in
    `consistent-lib.core` has a non-nil docstring and non-nil `:arglists`. This test
@@ -51,15 +51,21 @@ legitimate result of this stage, not a failure.
 - `src/consistent_lib/core.clj`
 - `src/consistent_lib/impl.clj` (new; absent under outcome B)
 - `test/consistent_lib/metadata_test.clj` (new)
-- `.clj-kondo/config.edn`, `.clj-kondo/hooks/**` (if needed for criterion a)
+- `.clj-kondo/config.edn`, `.clj-kondo/hooks/**` (if needed for criterion a). NOTE:
+  no `.clj-kondo/config.edn` exists as of `5ea0302` — stage 01 created one, and it was
+  deleted when the test ns moved to `:as c`, which removed the need for every
+  suppression it held. Creating one for criterion (a) is fine; do not reintroduce
+  suppressions that only mask the arg-order false positives (see stage-01 report,
+  Deviation 3).
 - `deps.edn` (only if the test alias needs the new test ns path/config; no deps)
 - `docs/stages/stage-02-REPORT.md`
 
 ## Tests (enumerated)
 
 - All stage-01 tests pass unchanged.
-- `metadata-test`: docstring + `:arglists` present on every public var (must count 17
-  vars — assert the count so future drift is caught).
+- `metadata-test`: docstring + `:arglists` present on every public var (must count 18
+  vars — assert the count so future drift is caught). Verified 2026-08-19:
+  `(count (ns-publics 'consistent-lib.core))` => 18, all public.
 
 ## Definition of Done
 
