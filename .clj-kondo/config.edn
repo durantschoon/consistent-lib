@@ -1,0 +1,13 @@
+;; clj-kondo configuration for consistent-lib.
+;;
+;; This file holds exactly one thing: a hook that teaches clj-kondo what
+;; `consistent-lib.impl/defwrapper` expands to. It contains NO warning
+;; suppressions, and none should be added to mask the argument-order type
+;; mismatches this library provokes (see docs/stages/stage-01-REPORT.md,
+;; Deviation 3) — suppression hides the false positive, a hook removes it.
+;;
+;; With the hook, generated wrappers are analyzed as ordinary defns: call sites
+;; get arity checking, and a wrong-arity call to a wrapper is an error.
+
+{:hooks {:analyze-call
+         {consistent-lib.impl/defwrapper hooks.consistent-lib.impl/defwrapper}}}
