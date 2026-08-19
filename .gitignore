@@ -15,3 +15,7 @@ pom.xml.asc
 .lsp/
 .portal/
 .clj-kondo/.cache/
+
+# Claude Code stage-executor worktrees (docs/stages/). Scoped to worktrees/ rather
+# than all of .claude/ so a tracked .claude/settings.json stays tracked.
+.claude/worktrees/
