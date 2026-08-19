@@ -1,7 +1,11 @@
 ;; Defining a Clojure library that redefines some common sequence operations 
 ;; with a consistent "main-problem-data" first argument order.
 
-(ns consistent-lib.core)
+(ns consistent-lib.core
+  (:refer-clojure :exclude [partition partition-all partition-by take drop
+                            take-nth take-while drop-while split-at split-with
+                            group-by interleave interpose concat some remove
+                            subvec reduce]))
 
 (defn partition
   "Partitions a collection into parts of size n. The main-problem-data (coll) comes first, followed by the size (n)."

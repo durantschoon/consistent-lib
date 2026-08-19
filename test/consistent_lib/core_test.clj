@@ -12,9 +12,9 @@
 
 (deftest partition-all-test
   (testing "partition-all with complete groups"
-    (is (= '((1 2) (3 4)) (partition-all [1 2 3 4] 2)))
+    (is (= '((1 2) (3 4)) (partition-all [1 2 3 4] 2))))
   (testing "partition-all with incomplete final group"
-    (is (= '((1 2) (3 4) (5)) (partition-all [1 2 3 4 5] 2))))))
+    (is (= '((1 2) (3 4) (5)) (partition-all [1 2 3 4 5] 2)))))
 
 (deftest partition-by-test
   (testing "partition by odd/even"
