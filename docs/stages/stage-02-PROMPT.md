@@ -2,7 +2,7 @@
 
 ## Motivation (measured)
 
-- `src/consistent_lib/core.clj` hand-writes 17 wrappers whose docstrings and arglists
+- `src/consistent_lib/core.clj` hand-writes 18 wrappers whose docstrings and arglists
   already drift from `clojure.core` (e.g. our `partition` documents only `[coll n]`
   while core supports step and pad arities).
 - Stage 04 plans roughly 14 more wrappers, and stage 03 multiplies arities. Whether

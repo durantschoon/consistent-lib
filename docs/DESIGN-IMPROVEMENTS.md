@@ -1,13 +1,14 @@
 # Design improvement suggestions
 
-Reviewed 2026-08-18 against `consistent_lib/core.clj`, the test suite, the README, and
+Reviewed 2026-08-18 against `consistent_lib/core.clj` (now `src/consistent_lib/core.clj`
+after stage 01), the test suite, the README, and
 the stage roadmap in `docs/stages/README.md`. Where a suggestion is already scheduled
 by a stage prompt, that stage is cross-referenced; the point here is the *design
 rationale*, which the stage prompts mostly leave implicit.
 
 ## 1. State an explicit inclusion rule — and apply it
 
-The current 17 wrappers mix three different situations:
+The current 18 wrappers mix three different situations:
 
 1. **Coll-second core fns** (`partition`, `take`, `drop-while`, …) — the reason this
    library exists. Keep.
@@ -32,7 +33,14 @@ follows from that sentence.
 
 ## 2. Declare `:refer-clojure :exclude` in the namespace
 
-`consistent-lib.core` shadows 17 `clojure.core` names but never declares
+> **RESOLVED 2026-08-18** — both halves of this section are done. `core.clj` declares
+> `(:refer-clojure :exclude [...])` for all 18 names (`7c513c3`), and the test ns moved
+> to `:as c` (`5ea0302`). Compiler warnings on `(require '[consistent-lib.core :as c])`:
+> 18 → 0. `clj-kondo --lint src test` is 0/0 cold and warm with no config file at all.
+> Retained below as the rationale; stage 04 must extend the `:exclude` vector when it
+> adds wrappers, or `:redefined-var` will fire.
+
+`consistent-lib.core` shadows 18 `clojure.core` names but never declares
 `(:refer-clojure :exclude [partition take drop ...])`. Loading the namespace emits a
 wall of "already refers to" warnings, and the warnings will grow with stage 04.
 This is a one-line fix and also serves as a machine-checked manifest of exactly which
@@ -95,7 +103,7 @@ Beyond the broken `(map inc)` thread (see §1), the "complex example" claims
 `(1 2 3)`. Wrong examples in a correctness-pitch library are uniquely damaging;
 suggest making every README example REPL-verified (stage 05's test.check harness could
 double as a doc-example checker, or add a small `README`-examples test ns). Also: the
-README's "Available Functions" list shows 9 of the 17 fns, and the install snippet
+README's "Available Functions" list shows 9 of the 18 fns, and the install snippet
 references `project.clj`/Leiningen while the roadmap builds on `deps.edn` — align on
 one story (git dep + `deps.edn` until Clojars at stage 08).
 
@@ -105,14 +113,14 @@ one story (git dep + `deps.edn` until Clojars at stage 08).
 `subvec`, and `reduce` have no tests at all today. Stage 05's generative equivalence
 suite will subsume most of this, but until then a failure in half the public API is
 invisible. Cheap interim fix: one `deftest` per untested fn with two or three
-examples, written in the same style as the existing tests. (Note the existing
-`partition-all-test` has a misplaced paren — its second `testing` block is nested
-inside the first.)
+examples, written in the same style as the existing tests. (The `partition-all-test`
+paren is RESOLVED: it was not merely misnested — the unbalanced paren meant the whole
+test ns failed to read, so the suite had never run. Fixed in `3fc0b6d`; siblings
+restored in `7c513c3`. `core.clj` had the same defect, fixed in the same commit.)
 
 ## 8. Smaller points
 
-- **Layout**: `consistent_lib/core.clj` at the repo root (not `src/`) predates
-  stage 01; nothing else to add beyond that stage.
+- **Layout**: RESOLVED — moved to `src/consistent_lib/core.clj` by stage 01 (`7c513c3`).
 - **Naming collision as a feature**: keeping core's names is the right design (the
   library is a drop-in reading of core), but the README should explicitly warn that
   `:refer :all`-ing this namespace is unsupported and `:as c` is the intended usage.
